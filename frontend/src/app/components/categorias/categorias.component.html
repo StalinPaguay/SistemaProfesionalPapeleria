@@ -1,0 +1,76 @@
+<div class="page-header">
+  <h2><span class="material-icons-outlined">category</span> Categorías</h2>
+  <button class="btn btn-primary" (click)="abrirModalCrear()">
+    <span class="material-icons-outlined">add</span> Nueva Categoría
+  </button>
+</div>
+
+<div *ngIf="mensaje" class="alert" [ngClass]="'alert-' + tipoMensaje">
+  <span class="material-icons-outlined">{{ tipoMensaje === 'success' ? 'check_circle' : 'error' }}</span>
+  {{ mensaje }}
+</div>
+
+<div class="card">
+  <div class="table-container" *ngIf="categorias.length > 0; else empty">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cat of categorias">
+          <td><span class="badge badge-info">#{{ cat.id }}</span></td>
+          <td><strong>{{ cat.nombre }}</strong></td>
+          <td>
+            <div class="btn-group">
+              <button class="btn-icon edit" (click)="abrirModalEditar(cat)" title="Editar">
+                <span class="material-icons-outlined">edit</span>
+              </button>
+              <button class="btn-icon delete" (click)="eliminar(cat.id!)" title="Eliminar">
+                <span class="material-icons-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons-outlined">category</span>
+      <p>No hay categorías registradas</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons-outlined">{{ editandoId ? 'edit' : 'add_circle' }}</span>
+        {{ editandoId ? 'Editar Categoría' : 'Nueva Categoría' }}
+      </h3>
+      <button class="close-btn" (click)="cerrarModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="nombre">Nombre de la categoría</label>
+        <input type="text" id="nombre" class="form-control" [(ngModel)]="categoriaForm.nombre"
+               placeholder="Ej: Útiles escolares" required>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="guardar()" [disabled]="!categoriaForm.nombre.trim()">
+        <span class="material-icons-outlined">save</span>
+        {{ editandoId ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

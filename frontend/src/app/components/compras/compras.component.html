@@ -1,0 +1,154 @@
+<div class="page-header">
+  <h2><span class="material-icons-outlined">shopping_cart</span> Compras a Proveedores</h2>
+  <button class="btn btn-primary" (click)="abrirModalNuevaCompra()">
+    <span class="material-icons-outlined">add_shopping_cart</span> Registrar Compra
+  </button>
+</div>
+
+<div *ngIf="mensaje" class="alert" [ngClass]="'alert-' + tipoMensaje">
+  <span class="material-icons-outlined">{{ tipoMensaje === 'success' ? 'check_circle' : 'error' }}</span>
+  {{ mensaje }}
+</div>
+
+<div class="card">
+  <div class="table-container" *ngIf="compras.length > 0; else empty">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Proveedor</th>
+          <th style="width: 160px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of compras">
+          <td><span class="badge badge-info">#{{ c.id }}</span></td>
+          <td>{{ c.fecha }}</td>
+          <td><strong>{{ c.proveedorNombre }}</strong></td>
+          <td>
+            <div class="btn-group">
+              <!-- Router link para ver detalles en otra vista -->
+              <a [routerLink]="['/compras', c.id, 'detalles']" class="btn btn-secondary btn-sm" title="Ver Detalles">
+                <span class="material-icons-outlined" style="font-size: 16px;">visibility</span> Ver Detalles
+              </a>
+              <button class="btn-icon delete" (click)="eliminarCompra(c.id!)" title="Eliminar">
+                <span class="material-icons-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons-outlined">receipt_long</span>
+      <p>No se han registrado compras aún</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal Nueva Compra (Flujo Master-Detail) -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" style="max-width: 700px;" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons-outlined">add_shopping_cart</span>
+        Registrar Nueva Compra
+      </h3>
+      <button class="close-btn" (click)="cerrarModal()"><span class="material-icons-outlined">close</span></button>
+    </div>
+    
+    <div class="modal-body" style="background: #f8f9fb; border-bottom: 1px solid var(--border-light)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Proveedor</label>
+          <select class="form-control" [(ngModel)]="nuevaCompra.proveedorId">
+            <option [ngValue]="0" disabled>Seleccione Proveedor</option>
+            <option *ngFor="let p of proveedores" [ngValue]="p.id">{{ p.nombre }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" class="form-control" [(ngModel)]="nuevaCompra.fecha">
+        </div>
+      </div>
+    </div>
+
+    <!-- Agregar productos a la compra -->
+    <div class="modal-body">
+      <h4 style="margin-bottom: 12px; font-size: 1rem; color: var(--primary);">Agregar Productos</h4>
+      <div class="form-row" style="grid-template-columns: 2fr 1fr 1fr auto; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Producto</label>
+          <select class="form-control" [(ngModel)]="detalleTemp.productoId">
+            <option [ngValue]="0" disabled>Seleccionar...</option>
+            <option *ngFor="let prod of productos" [ngValue]="prod.id">{{ prod.nombre }}</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Cantidad</label>
+          <input type="number" class="form-control" [(ngModel)]="detalleTemp.cantidad" min="1">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>Precio Unit.</label>
+          <input type="number" class="form-control" [(ngModel)]="detalleTemp.precioCompra" min="0.01" step="0.01">
+        </div>
+        <button class="btn btn-secondary" (click)="agregarDetalle()" 
+                style="height: 39px; margin-bottom: 0;"
+                [disabled]="!detalleTemp.productoId || detalleTemp.cantidad < 1 || detalleTemp.precioCompra <= 0">
+          <span class="material-icons-outlined">add</span>
+        </button>
+      </div>
+
+      <!-- Tabla de detalles temporales -->
+      <div *ngIf="nuevaCompra.detalles!.length > 0" style="margin-top: 20px; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;">
+        <table style="font-size: 0.85rem;">
+          <thead style="background: var(--surface-alt);">
+            <tr>
+              <th style="padding: 8px 12px;">Producto</th>
+              <th style="padding: 8px 12px; text-align: center;">Cant</th>
+              <th style="padding: 8px 12px; text-align: right;">Precio U.</th>
+              <th style="padding: 8px 12px; text-align: right;">Total</th>
+              <th style="padding: 8px 12px; width: 40px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let det of nuevaCompra.detalles; let i = index">
+              <td style="padding: 8px 12px;">{{ det.productoNombre }}</td>
+              <td style="padding: 8px 12px; text-align: center;">{{ det.cantidad }}</td>
+              <td style="padding: 8px 12px; text-align: right;">${{ det.precioCompra | number:'1.2-2' }}</td>
+              <td style="padding: 8px 12px; text-align: right; font-weight: 600;">${{ calcularTotalDetalle(det) | number:'1.2-2' }}</td>
+              <td style="padding: 4px 12px;">
+                <button class="btn-icon delete" style="padding: 2px" (click)="removerDetalle(i)">
+                  <span class="material-icons-outlined" style="font-size: 16px;">close</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot style="background: var(--surface-hover); border-top: 2px solid var(--border);">
+            <tr>
+              <td colspan="3" style="padding: 10px 12px; text-align: right; font-weight: 600;">TOTAL DE LA COMPRA:</td>
+              <td colspan="2" style="padding: 10px 12px; font-weight: 700; color: var(--primary); font-size: 1.1rem;">
+                ${{ calcularTotalCompra() | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div *ngIf="nuevaCompra.detalles!.length === 0" style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+        Agregue productos a la compra usando el formulario de arriba.
+      </div>
+    </div>
+
+    <div class="modal-footer" style="background: var(--surface-hover)">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="registrarCompra()" 
+              [disabled]="!nuevaCompra.proveedorId || nuevaCompra.detalles!.length === 0">
+        <span class="material-icons-outlined">check_circle</span>
+        Confirmar e Ingresar Stock
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h2>
+    <a routerLink="/compras" class="btn-icon" style="margin-right: 12px; border:none; background: var(--surface); box-shadow: var(--shadow-sm);">
+      <span class="material-icons-outlined">arrow_back</span>
+    </a>
+    Detalle de Compra <span *ngIf="compra" style="color: var(--text-muted); font-weight: 400;">#{{ compra.id }}</span>
+  </h2>
+</div>
+
+<div *ngIf="cargando" class="empty-state">
+  <span class="material-icons-outlined" style="animation: spin 1s linear infinite;">sync</span>
+  <p>Cargando detalles...</p>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">
+  <span class="material-icons-outlined">error</span>
+  No se pudo cargar la información de la compra.
+</div>
+
+<div *ngIf="!cargando && !error && compra" class="card" style="margin-bottom: 24px;">
+  <div class="card-body" style="display: flex; justify-content: space-between; align-items: center; background: var(--surface-hover); border-bottom: 1px solid var(--border-light);">
+    <div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Proveedor</p>
+      <h3 style="margin: 0; color: var(--primary);">{{ compra.proveedorNombre }}</h3>
+    </div>
+    <div style="text-align: right;">
+      <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Fecha de Compra</p>
+      <h3 style="margin: 0; font-weight: 500;">{{ compra.fecha }}</h3>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID Prod.</th>
+          <th>Producto</th>
+          <th style="text-align: center;">Cantidad</th>
+          <th style="text-align: right;">Precio Unitario</th>
+          <th style="text-align: right;">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let det of compra.detalles">
+          <td><span class="badge badge-info">#{{ det.productoId }}</span></td>
+          <td><strong>{{ det.productoNombre }}</strong></td>
+          <td style="text-align: center;">{{ det.cantidad }}</td>
+          <td style="text-align: right;">${{ det.precioCompra | number:'1.2-2' }}</td>
+          <td style="text-align: right; font-weight: 500;">${{ (det.cantidad * det.precioCompra) | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+      <tfoot style="background: var(--surface-hover); border-top: 2px solid var(--border);">
+        <tr>
+          <td colspan="4" style="padding: 16px; text-align: right; font-weight: 600; font-size: 1.1rem;">TOTAL:</td>
+          <td style="padding: 16px; text-align: right; font-weight: 700; color: var(--primary); font-size: 1.3rem;">
+            ${{ calcularTotal() | number:'1.2-2' }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="page-header">
+  <h2><span class="material-icons-outlined">inventory_2</span> Productos</h2>
+  <button class="btn btn-primary" (click)="abrirModalCrear()">
+    <span class="material-icons-outlined">add</span> Nuevo Producto
+  </button>
+</div>
+
+<div *ngIf="mensaje" class="alert" [ngClass]="'alert-' + tipoMensaje">
+  <span class="material-icons-outlined">{{ tipoMensaje === 'success' ? 'check_circle' : 'error' }}</span>
+  {{ mensaje }}
+</div>
+
+<div class="card">
+  <div class="table-container" *ngIf="productos.length > 0; else empty">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Categoría</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prod of productos">
+          <td><span class="badge badge-info">#{{ prod.id }}</span></td>
+          <td><strong>{{ prod.nombre }}</strong></td>
+          <td>$ {{ prod.precio | number:'1.2-2' }}</td>
+          <td>
+            <span class="badge" [ngClass]="prod.stock > 10 ? 'badge-success' : (prod.stock > 0 ? 'badge-warning' : 'badge-info')">
+              {{ prod.stock }} uds
+            </span>
+          </td>
+          <td>{{ prod.categoriaNombre || '—' }}</td>
+          <td>
+            <div class="btn-group">
+              <button class="btn-icon edit" (click)="abrirModalEditar(prod)" title="Editar">
+                <span class="material-icons-outlined">edit</span>
+              </button>
+              <button class="btn-icon delete" (click)="eliminar(prod.id!)" title="Eliminar">
+                <span class="material-icons-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons-outlined">inventory_2</span>
+      <p>No hay productos registrados</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons-outlined">{{ editandoId ? 'edit' : 'add_circle' }}</span>
+        {{ editandoId ? 'Editar Producto' : 'Nuevo Producto' }}
+      </h3>
+      <button class="close-btn" (click)="cerrarModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="nombre">Nombre del producto</label>
+        <input type="text" id="nombre" class="form-control" [(ngModel)]="productoForm.nombre"
+               placeholder="Ej: Cuaderno 100 hojas">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="precio">Precio</label>
+          <input type="number" id="precio" class="form-control" [(ngModel)]="productoForm.precio"
+                 placeholder="0.00" min="0.01" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock</label>
+          <input type="number" id="stock" class="form-control" [(ngModel)]="productoForm.stock"
+                 placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="categoria">Categoría</label>
+        <select id="categoria" class="form-control" [(ngModel)]="productoForm.categoriaId">
+          <option [ngValue]="0" disabled>Seleccione una categoría</option>
+          <option *ngFor="let cat of categorias" [ngValue]="cat.id">{{ cat.nombre }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="guardar()"
+              [disabled]="!productoForm.nombre.trim() || !productoForm.categoriaId">
+        <span class="material-icons-outlined">save</span>
+        {{ editandoId ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

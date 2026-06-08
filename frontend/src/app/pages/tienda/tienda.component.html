@@ -1,0 +1,53 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Tienda PaperDS</h1>
+      <p class="page-subtitle">Explora y compra nuestros productos</p>
+    </div>
+    
+    <div class="search-box">
+      <span class="material-icons-outlined">search</span>
+      <input type="text" placeholder="Buscar productos..." [(ngModel)]="searchTerm" (keyup)="buscar()">
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <span class="material-icons-outlined animate-spin">refresh</span>
+    <p>Cargando catálogo...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    <span class="material-icons-outlined">error</span>
+    <span>{{ error }}</span>
+  </div>
+
+  <div *ngIf="!loading && filteredProductos.length === 0" class="empty-state">
+    <span class="material-icons-outlined">inventory</span>
+    <h3>No se encontraron productos</h3>
+    <p>Intenta con otros términos de búsqueda.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" *ngIf="!loading && filteredProductos.length > 0">
+    <div class="product-card" *ngFor="let prod of filteredProductos">
+      <div class="product-image-placeholder">
+        <span class="material-icons-outlined text-gray-300" style="font-size: 48px;">inventory_2</span>
+        <span *ngIf="prod.stock_actual <= 0" class="out-of-stock-badge">Agotado</span>
+      </div>
+      <div class="product-details">
+        <span class="product-category">{{ prod.categoria?.nombre || 'General' }}</span>
+        <h3 class="product-name">{{ prod.nombre }}</h3>
+        <p class="product-desc">{{ prod.descripcion || 'Sin descripción' }}</p>
+        
+        <div class="product-footer">
+          <span class="product-price">${{ prod.precio | number:'1.2-2' }}</span>
+          <button class="btn-add-cart" 
+                  [disabled]="prod.stock_actual <= 0" 
+                  (click)="agregarAlCarrito(prod)"
+                  [title]="prod.stock_actual <= 0 ? 'Agotado' : 'Añadir al carrito'">
+            <span class="material-icons-outlined">add_shopping_cart</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h2><span class="material-icons-outlined">local_shipping</span> Proveedores</h2>
+  <button class="btn btn-primary" (click)="abrirModalCrear()">
+    <span class="material-icons-outlined">add</span> Nuevo Proveedor
+  </button>
+</div>
+
+<div *ngIf="mensaje" class="alert" [ngClass]="'alert-' + tipoMensaje">
+  <span class="material-icons-outlined">{{ tipoMensaje === 'success' ? 'check_circle' : 'error' }}</span>
+  {{ mensaje }}
+</div>
+
+<div class="card">
+  <div class="table-container" *ngIf="proveedores.length > 0; else empty">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prov of proveedores">
+          <td><span class="badge badge-info">#{{ prov.id }}</span></td>
+          <td><strong>{{ prov.nombre }}</strong></td>
+          <td>{{ prov.telefono || '—' }}</td>
+          <td>{{ prov.correo || '—' }}</td>
+          <td>
+            <div class="btn-group">
+              <button class="btn-icon edit" (click)="abrirModalEditar(prov)" title="Editar">
+                <span class="material-icons-outlined">edit</span>
+              </button>
+              <button class="btn-icon delete" (click)="eliminar(prov.id!)" title="Eliminar">
+                <span class="material-icons-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons-outlined">local_shipping</span>
+      <p>No hay proveedores registrados</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons-outlined">{{ editandoId ? 'edit' : 'add_circle' }}</span>
+        {{ editandoId ? 'Editar Proveedor' : 'Nuevo Proveedor' }}
+      </h3>
+      <button class="close-btn" (click)="cerrarModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="nombre">Nombre del proveedor</label>
+        <input type="text" id="nombre" class="form-control" [(ngModel)]="proveedorForm.nombre"
+               placeholder="Ej: Distribuidora Escolar" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="text" id="telefono" class="form-control" [(ngModel)]="proveedorForm.telefono"
+                 placeholder="Ej: 0991234567">
+        </div>
+        <div class="form-group">
+          <label for="correo">Correo Electrónico</label>
+          <input type="email" id="correo" class="form-control" [(ngModel)]="proveedorForm.correo"
+                 placeholder="Ej: ventas@distribuidora.com">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="guardar()" [disabled]="!proveedorForm.nombre.trim()">
+        <span class="material-icons-outlined">save</span>
+        {{ editandoId ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

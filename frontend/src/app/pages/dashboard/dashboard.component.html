@@ -1,0 +1,68 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Dashboard PaperDS</h1>
+      <p class="page-subtitle">Resumen de la actividad del negocio</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <span class="material-icons-outlined animate-spin">refresh</span>
+    <p>Cargando métricas...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- KPIS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <div class="kpi-card">
+        <div class="kpi-icon bg-blue-100 text-blue-600">
+          <span class="material-icons-outlined">attach_money</span>
+        </div>
+        <div class="kpi-details">
+          <span class="kpi-title">Ingresos del Mes</span>
+          <span class="kpi-value">${{ stats.gananciasMes | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon bg-green-100 text-green-600">
+          <span class="material-icons-outlined">shopping_cart</span>
+        </div>
+        <div class="kpi-details">
+          <span class="kpi-title">Ventas Totales</span>
+          <span class="kpi-value">{{ stats.totalVentasMes }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon bg-purple-100 text-purple-600">
+          <span class="material-icons-outlined">people</span>
+        </div>
+        <div class="kpi-details">
+          <span class="kpi-title">Clientes</span>
+          <span class="kpi-value">{{ stats.totalClientes }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon bg-red-100 text-red-600">
+          <span class="material-icons-outlined">warning</span>
+        </div>
+        <div class="kpi-details">
+          <span class="kpi-title">Prod. Stock Bajo</span>
+          <span class="kpi-value">{{ stats.productosEnRiesgo }}</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <h3 class="chart-title">Evolución de Ventas</h3>
+      <div class="chart-wrapper">
+        <canvas #salesChart></canvas>
+      </div>
+    </div>
+  </div>
+</div>

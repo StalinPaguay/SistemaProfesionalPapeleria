@@ -1,0 +1,88 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Mi Carrito</h1>
+      <p class="page-subtitle">Revisa tus productos antes de pagar</p>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success mb-6">
+    <span class="material-icons-outlined">check_circle</span>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error mb-6">
+    <span class="material-icons-outlined">error</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div *ngIf="items.length === 0 && !successMessage" class="empty-state">
+    <span class="material-icons-outlined">remove_shopping_cart</span>
+    <h3>Tu carrito está vacío</h3>
+    <p>Agrega productos desde la tienda para continuar.</p>
+    <button class="btn btn-primary mt-4" routerLink="/tienda">Ir a la Tienda</button>
+  </div>
+
+  <div class="cart-layout" *ngIf="items.length > 0">
+    <div class="cart-items">
+      <div class="cart-card" *ngFor="let item of items">
+        <div class="item-image">
+          <span class="material-icons-outlined text-gray-400" style="font-size: 32px;">inventory_2</span>
+        </div>
+        
+        <div class="item-details">
+          <h3 class="item-name">{{ item.nombre }}</h3>
+          <p class="item-price">${{ item.precio | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="item-controls">
+          <div class="qty-control">
+            <button class="qty-btn" (click)="updateQuantity(item, -1)" [disabled]="item.cantidad <= 1">
+              <span class="material-icons-outlined">remove</span>
+            </button>
+            <span class="qty-val">{{ item.cantidad }}</span>
+            <button class="qty-btn" (click)="updateQuantity(item, 1)" [disabled]="item.cantidad >= item.stockDisponible">
+              <span class="material-icons-outlined">add</span>
+            </button>
+          </div>
+          
+          <div class="item-subtotal">
+            ${{ (item.precio * item.cantidad) | number:'1.2-2' }}
+          </div>
+
+          <button class="btn-remove" (click)="removeItem(item.productoId)" title="Eliminar">
+            <span class="material-icons-outlined">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <h3 class="summary-title">Resumen de Compra</h3>
+      
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>${{ total | number:'1.2-2' }}</span>
+      </div>
+      
+      <div class="summary-row text-sm text-gray-500">
+        <span>Impuestos</span>
+        <span>Calculado en caja</span>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span>${{ total | number:'1.2-2' }}</span>
+      </div>
+
+      <button class="btn btn-primary w-full mt-6 flex justify-center items-center gap-2" 
+              (click)="checkout()" [disabled]="isProcessing">
+        <span *ngIf="!isProcessing">Proceder al Pago</span>
+        <span *ngIf="isProcessing">Procesando...</span>
+        <span *ngIf="!isProcessing" class="material-icons-outlined text-sm">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>
