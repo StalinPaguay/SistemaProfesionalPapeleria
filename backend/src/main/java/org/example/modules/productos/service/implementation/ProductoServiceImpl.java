@@ -18,7 +18,18 @@ import java.util.stream.Collectors;
 import org.example.common.service.BaseServiceImpl;
 @Service
 /**
- * Implementación del servicio de Producto.
+ * Implementación central de la capa de servicio para la gestión de Productos.
+ * <p>
+ * Clase transaccional encargada de procesar las reglas de negocio, validar
+ * existencias, gestionar estados críticos de inventario y coordinar la
+ * persistencia a través del patrón Repositorio y el mapeo de entidades (DTO).
+ * Hereda operaciones CRUD genéricas de {@link org.example.common.service.BaseServiceImpl}.
+ * </p>
+ *
+ * @author Equipo de Desarrollo PaperDS
+ * @version 1.1.0
+ * @see org.example.modules.productos.service.interfaces.ProductoService
+ * @since 1.0
  */
 public class ProductoServiceImpl extends BaseServiceImpl<Producto, ProductoDTO, Long> implements ProductoService {
 
@@ -45,6 +56,15 @@ public class ProductoServiceImpl extends BaseServiceImpl<Producto, ProductoDTO, 
         return ProductoMapper.toEntity(dto);
     }
 
+    /**
+     * Valida, asocia categorías y persiste un nuevo producto en la base de datos.
+     * También evalúa automáticamente el umbral de stock para levantar alertas si es necesario.
+     *
+     * @param dto El Data Transfer Object que encapsula los datos del nuevo producto.
+     * @return El {@link ProductoDTO} persistido con su identificador único generado.
+     * @throws org.example.exception.ReglaNegocioException si el precio es <= 0 o el stock es negativo.
+     * @throws org.example.exception.RecursoNoEncontradoException si la categoría asociada no existe.
+     */
     @Override
     public ProductoDTO save(ProductoDTO dto) {
         validarReglasNegocio(dto);
@@ -61,6 +81,16 @@ public class ProductoServiceImpl extends BaseServiceImpl<Producto, ProductoDTO, 
         return toDTO(repository.save(entity));
     }
 
+    /**
+     * Ejecuta una actualización segura de los datos de un producto existente.
+     * Recupera la entidad original y sobrescribe únicamente los campos permitidos,
+     * recalculando el estado de las alertas de inventario.
+     *
+     * @param id  ID único del producto a modificar.
+     * @param dto El objeto con los nuevos datos a volcar en la entidad.
+     * @return El {@link ProductoDTO} resultante después de aplicar la actualización.
+     * @throws org.example.exception.RecursoNoEncontradoException si el producto o la categoría no existen.
+     */
     @Override
     public ProductoDTO update(Long id, ProductoDTO dto) {
         Producto existente = repository.findById(id)
@@ -113,6 +143,15 @@ public class ProductoServiceImpl extends BaseServiceImpl<Producto, ProductoDTO, 
                 .orElseThrow(() -> new RecursoNoEncontradoException("Producto con ID " + id + " no encontrado."));
     }
 
+    /**
+     * Modifica el nivel de existencias físicas de un producto de manera atómica.
+     * Calcula el nuevo balance de stock e invoca mecanismos de alerta automática
+     * en caso de traspasar el umbral mínimo definido para dicho producto.
+     *
+     * @param id              Identificador del producto en el inventario.
+     * @param cantidadAgregar El diferencial de inventario (positivo para entradas, negativo para salidas/ventas).
+     * @throws org.example.exception.ReglaNegocioException si la operación resulta en un stock matemáticamente imposible (< 0).
+     */
     @Override
     public void actualizarStock(Long id, Integer cantidadAgregar) {
         Producto producto = getEntityById(id);
