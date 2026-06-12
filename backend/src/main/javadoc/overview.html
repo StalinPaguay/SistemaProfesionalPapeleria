@@ -1,0 +1,31 @@
+<body>
+    <h1>Documentación Oficial: PaperDS (Backend)</h1>
+    <p>
+        Bienvenido a la documentación arquitectónica y técnica del <b>Sistema Profesional de Papelería (PaperDS)</b>.
+        Esta plataforma ha sido diseñada bajo estrictos estándares de la industria del software utilizando el framework <b>Spring Boot 3</b>.
+    </p>
+
+    <h2>1. Arquitectura del Sistema</h2>
+    <p>
+        El sistema está fundamentado en una <b>Arquitectura Multicapa (N-Tier)</b> orientada a dominios, garantizando bajo acoplamiento y alta cohesión.
+        Las capas principales son:
+    </p>
+    <ul>
+        <li><b>Controladores (REST API):</b> Endpoints seguros y documentados que sirven como interfaz de comunicación con el Frontend (Angular).</li>
+        <li><b>Servicios (Business Logic):</b> Capa transaccional (<code>@Transactional</code>) donde residen las reglas de negocio, validaciones de stock y cálculos financieros.</li>
+        <li><b>Repositorios (Data Access):</b> Integración fluida con PostgreSQL utilizando Spring Data JPA y consultas JPQL optimizadas.</li>
+        <li><b>DTOs y Mappers:</b> Objetos de Transferencia de Datos que actúan como barrera de seguridad para no exponer las entidades físicas directamente a la web.</li>
+    </ul>
+
+    <h2>2. Seguridad (DevSecOps)</h2>
+    <p>
+        PaperDS implementa un robusto esquema de seguridad sin estado basado en <b>JSON Web Tokens (JWT)</b> integrado con <b>Spring Security</b>.
+        Las rutas están aseguradas por un control de acceso basado en roles (RBAC), separando estrictamente a los <code>USUARIOS</code> de los <code>ADMINISTRADORES</code>.
+    </p>
+
+    <h2>3. Diseño Modular</h2>
+    <p>
+        A continuación, en la sección de paquetes, encontrarás la documentación detallada de cada módulo del sistema.
+        Navega libremente por las clases para entender las implementaciones de los servicios, repositorios y controladores.
+    </p>
+</body>
