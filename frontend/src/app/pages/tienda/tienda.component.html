@@ -29,9 +29,12 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" *ngIf="!loading && filteredProductos.length > 0">
     <div class="product-card" *ngFor="let prod of filteredProductos">
-      <div class="product-image-placeholder">
-        <span class="material-icons-outlined text-gray-300" style="font-size: 48px;">inventory_2</span>
-        <span *ngIf="prod.stock_actual <= 0" class="out-of-stock-badge">Agotado</span>
+      <div class="product-image-container">
+        <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl.startsWith('http') || prod.imagenUrl.startsWith('/') ? prod.imagenUrl : '/' + prod.imagenUrl" [alt]="prod.nombre" class="product-img">
+        <div *ngIf="!prod.imagenUrl" class="product-image-placeholder">
+          <span class="material-icons-outlined text-gray-300" style="font-size: 48px;">inventory_2</span>
+        </div>
+        <span *ngIf="prod.stock <= 0" class="out-of-stock-badge">Agotado</span>
       </div>
       <div class="product-details">
         <span class="product-category">{{ prod.categoria?.nombre || 'General' }}</span>
@@ -41,9 +44,9 @@
         <div class="product-footer">
           <span class="product-price">${{ prod.precio | number:'1.2-2' }}</span>
           <button class="btn-add-cart" 
-                  [disabled]="prod.stock_actual <= 0" 
+                  [disabled]="prod.stock <= 0" 
                   (click)="agregarAlCarrito(prod)"
-                  [title]="prod.stock_actual <= 0 ? 'Agotado' : 'Añadir al carrito'">
+                  [title]="prod.stock <= 0 ? 'Agotado' : 'Añadir al carrito'">
             <span class="material-icons-outlined">add_shopping_cart</span>
           </button>
         </div>

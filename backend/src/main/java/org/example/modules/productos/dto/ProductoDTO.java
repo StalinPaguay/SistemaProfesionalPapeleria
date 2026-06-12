@@ -34,6 +34,9 @@ public class ProductoDTO {
     @NotBlank(message = "El campo categoriaNombre es obligatorio")
     private String categoriaNombre;
 
+    private String descripcion;
+    private String imagenUrl;
+
     public ProductoDTO() {}
 
     /**
@@ -120,4 +123,10 @@ public class ProductoDTO {
      * @param valor el valor a establecer
      */
     public void setCategoriaNombre(String categoriaNombre) { this.categoriaNombre = categoriaNombre; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 }

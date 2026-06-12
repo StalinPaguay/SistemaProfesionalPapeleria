@@ -27,6 +27,11 @@ import { AuthService } from '../../services/auth.service';
             <span>Dashboard</span>
           </a>
 
+          <a routerLink="/usuarios" routerLinkActive="active" class="nav-item">
+            <span class="material-icons-outlined">people</span>
+            <span>Usuarios</span>
+          </a>
+
           <a routerLink="/categorias" routerLinkActive="active" class="nav-item">
             <span class="material-icons-outlined">category</span>
             <span>Categorías</span>

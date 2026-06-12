@@ -1,65 +1,83 @@
-<div class="page-container">
-  <div class="page-header">
+<div class="dashboard-wrapper">
+  <div class="dashboard-header">
     <div>
-      <h1 class="page-title">Dashboard PaperDS</h1>
-      <p class="page-subtitle">Resumen de la actividad del negocio</p>
+      <h1 class="dashboard-title">Visión General</h1>
+      <p class="dashboard-subtitle">Monitoriza el rendimiento y crecimiento de PaperDS</p>
     </div>
   </div>
 
   <div *ngIf="loading" class="loading-state">
-    <span class="material-icons-outlined animate-spin">refresh</span>
-    <p>Cargando métricas...</p>
+    <div class="spinner"></div>
+    <p>Sincronizando métricas...</p>
   </div>
 
-  <div *ngIf="!loading">
+  <div *ngIf="!loading" class="dashboard-content fade-in-up">
     <!-- KPIS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="kpi-grid">
       
-      <div class="kpi-card">
-        <div class="kpi-icon bg-blue-100 text-blue-600">
-          <span class="material-icons-outlined">attach_money</span>
+      <!-- KPI 1 -->
+      <div class="kpi-card glass-panel primary-gradient-border">
+        <div class="kpi-icon-wrapper primary-icon">
+          <span class="material-icons-outlined">account_balance_wallet</span>
         </div>
         <div class="kpi-details">
-          <span class="kpi-title">Ingresos del Mes</span>
-          <span class="kpi-value">${{ stats.gananciasMes | number:'1.2-2' }}</span>
+          <span class="kpi-title">Ingresos Netos</span>
+          <span class="kpi-value" [class.negative-income]="stats.gananciasMes < 0">
+            {{ stats.gananciasMes < 0 ? '-' : '' }}${{ (stats.gananciasMes < 0 ? -stats.gananciasMes : stats.gananciasMes) | number:'1.2-2' }}
+          </span>
+          <span class="kpi-trend positive"><span class="material-icons-outlined">trending_up</span> Actualizado hoy</span>
         </div>
+        <div class="card-glow"></div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-icon bg-green-100 text-green-600">
-          <span class="material-icons-outlined">shopping_cart</span>
+      <!-- KPI 2 -->
+      <div class="kpi-card glass-panel success-gradient-border">
+        <div class="kpi-icon-wrapper success-icon">
+          <span class="material-icons-outlined">shopping_cart_checkout</span>
         </div>
         <div class="kpi-details">
           <span class="kpi-title">Ventas Totales</span>
-          <span class="kpi-value">{{ stats.totalVentasMes }}</span>
+          <span class="kpi-value counter">{{ stats.totalVentasMes }}</span>
+          <span class="kpi-trend positive"><span class="material-icons-outlined">show_chart</span> Crecimiento</span>
         </div>
+        <div class="card-glow"></div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-icon bg-purple-100 text-purple-600">
-          <span class="material-icons-outlined">people</span>
+      <!-- KPI 3 -->
+      <div class="kpi-card glass-panel info-gradient-border">
+        <div class="kpi-icon-wrapper info-icon">
+          <span class="material-icons-outlined">groups</span>
         </div>
         <div class="kpi-details">
-          <span class="kpi-title">Clientes</span>
-          <span class="kpi-value">{{ stats.totalClientes }}</span>
+          <span class="kpi-title">Clientes Registrados</span>
+          <span class="kpi-value counter">{{ stats.totalClientes }}</span>
+          <span class="kpi-trend"><span class="material-icons-outlined">people_alt</span> Total histórico</span>
         </div>
+        <div class="card-glow"></div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-icon bg-red-100 text-red-600">
-          <span class="material-icons-outlined">warning</span>
+      <!-- KPI 4 -->
+      <div class="kpi-card glass-panel danger-gradient-border">
+        <div class="kpi-icon-wrapper danger-icon">
+          <span class="material-icons-outlined">inventory_2</span>
         </div>
         <div class="kpi-details">
-          <span class="kpi-title">Prod. Stock Bajo</span>
-          <span class="kpi-value">{{ stats.productosEnRiesgo }}</span>
+          <span class="kpi-title">Alerta de Stock</span>
+          <span class="kpi-value counter" [class.negative-income]="stats.productosEnRiesgo > 0">{{ stats.productosEnRiesgo }}</span>
+          <span class="kpi-trend danger" *ngIf="stats.productosEnRiesgo > 0"><span class="material-icons-outlined">error_outline</span> Requiere atención</span>
+          <span class="kpi-trend positive" *ngIf="stats.productosEnRiesgo === 0"><span class="material-icons-outlined">check_circle</span> Inventario sano</span>
         </div>
+        <div class="card-glow"></div>
       </div>
 
     </div>
 
     <!-- Chart Section -->
-    <div class="chart-container">
-      <h3 class="chart-title">Evolución de Ventas</h3>
+    <div class="chart-panel glass-panel">
+      <div class="chart-header">
+        <h3 class="chart-title">Evolución Financiera</h3>
+        <button class="action-btn"><span class="material-icons-outlined">more_horiz</span></button>
+      </div>
       <div class="chart-wrapper">
         <canvas #salesChart></canvas>
       </div>

@@ -74,6 +74,8 @@ public class ProductoServiceImpl extends BaseServiceImpl<Producto, ProductoDTO, 
         existente.setPrecio(dto.getPrecio());
         existente.setStock(dto.getStock());
         existente.setCategoria(categoria);
+        if (dto.getDescripcion() != null) existente.setDescripcion(dto.getDescripcion());
+        if (dto.getImagenUrl() != null) existente.setImagenUrl(dto.getImagenUrl());
         if (existente.getStock() <= existente.getStockMinimo()) {
             existente.setAlertaStockBajo(true);
         } else {

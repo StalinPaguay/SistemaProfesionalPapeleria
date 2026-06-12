@@ -1,0 +1,75 @@
+<div class="home-container">
+  <!-- Navbar -->
+  <nav class="home-nav">
+    <div class="logo">
+      <span class="material-icons-outlined text-indigo-600 mr-2">storefront</span>
+      <span class="font-extrabold text-2xl tracking-tight text-slate-800">PaperDS</span>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/login" class="nav-link font-medium">Ingresar</a>
+      <a routerLink="/register" class="btn-premium">Crear Cuenta</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main class="hero-section">
+    <div class="hero-content animate-slide-up">
+      <div class="badge-new mb-6 inline-flex items-center gap-2">
+        <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">Nuevo</span>
+        <span class="text-sm font-medium text-slate-600">Sistema Premium 2026</span>
+      </div>
+      
+      <h1 class="hero-title">
+        La gestión de tu <span class="text-gradient">Papelería</span> al siguiente nivel
+      </h1>
+      
+      <p class="hero-subtitle">
+        Controla tu inventario, gestiona proveedores y aumenta tus ventas con una interfaz diseñada para la máxima productividad.
+      </p>
+      
+      <div class="cta-group">
+        <a routerLink="/login" class="btn-premium btn-large group">
+          Iniciar Sesión
+          <span class="material-icons-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </a>
+        <a routerLink="/register" class="btn-premium-outline btn-large">
+          Registrarse Gratis
+        </a>
+      </div>
+      
+      <div class="trusted-by mt-12">
+        <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Módulos Profesionales Integrados</p>
+        <div class="flex flex-wrap items-center justify-start gap-8 opacity-60">
+          <span class="flex items-center gap-2 font-bold text-slate-700"><span class="material-icons-outlined">inventory_2</span> Inventario</span>
+          <span class="flex items-center gap-2 font-bold text-slate-700"><span class="material-icons-outlined">point_of_sale</span> Ventas (POS)</span>
+          <span class="flex items-center gap-2 font-bold text-slate-700"><span class="material-icons-outlined">analytics</span> Reportes</span>
+          <span class="flex items-center gap-2 font-bold text-slate-700"><span class="material-icons-outlined">groups</span> Empleados</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="hero-visual animate-float hidden lg:flex">
+      <!-- Decoración Abstracta tipo Papelería -->
+      <div class="glass-mockup">
+        <div class="mockup-header">
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="mockup-body">
+          <div class="skeleton-line title"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          
+          <div class="mockup-grid mt-6">
+            <div class="mockup-card"></div>
+            <div class="mockup-card"></div>
+            <div class="mockup-card"></div>
+            <div class="mockup-card"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Elementos decorativos de luz -->
+      <div class="deco-circle circle-1"></div>
+      <div class="deco-circle circle-2"></div>
+    </div>
+  </main>
+</div>

@@ -40,6 +40,15 @@ public class Producto {
 
     private BigDecimal precio;
 
+    @Column(name = "marca")
+    private String marca;
+
+    @Column(name = "descripcion", length = 500)
+    private String descripcion;
+
+    @Column(name = "imagen_url", length = 1000)
+    private String imagenUrl;
+
     public Producto() {}
 
     public Long getId() { return id; }
@@ -65,4 +74,13 @@ public class Producto {
 
     public Boolean getAlertaStockBajo() { return alertaStockBajo; }
     public void setAlertaStockBajo(Boolean alertaStockBajo) { this.alertaStockBajo = alertaStockBajo; }
+
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 }

@@ -5,6 +5,7 @@ import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -29,7 +30,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       next: (data: any) => {
         this.stats = data;
         this.loading = false;
-        setTimeout(() => this.initChart(), 0); // Give view time to render canvas
+        setTimeout(() => this.initChart(), 50); // Give view time to render canvas
       },
       error: (err) => {
         console.error('Error fetching dashboard stats', err);
@@ -49,15 +50,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.chartInstance.destroy();
     }
     
-    this.chartInstance = new Chart(this.salesChartRef.nativeElement, {
+    const ctx = this.salesChartRef.nativeElement.getContext('2d');
+    
+    // Create Premium Gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(79, 70, 229, 0.5)'); // Indigo 600
+    gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+    this.chartInstance = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Actual'],
         datasets: [{
-          label: 'Ventas Semanales',
-          data: [1200, 2500, 1800, this.stats.gananciasMes > 3000 ? 3000 : this.stats.gananciasMes],
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          label: 'Ingresos Netos',
+          data: [
+            this.stats.gananciasMes * 0.4, 
+            this.stats.gananciasMes * 0.6, 
+            this.stats.gananciasMes * 0.85, 
+            this.stats.gananciasMes
+          ],
+          borderColor: '#4f46e5',
+          backgroundColor: gradient,
+          borderWidth: 3,
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#4f46e5',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
           tension: 0.4,
           fill: true
         }]
@@ -68,13 +87,59 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         plugins: {
           legend: {
             display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            titleFont: { size: 13, family: "'Inter', sans-serif" },
+            bodyFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' },
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: false,
+            callbacks: {
+              label: function(context: any) {
+                let label = context.dataset.label || '';
+                if (label) { label += ': '; }
+                if (context.parsed.y !== null) {
+                  label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                }
+                return label;
+              }
+            }
           }
         },
         scales: {
+          x: {
+            grid: {
+              display: false,
+              drawOnChartArea: false
+            },
+            ticks: {
+              color: '#64748b',
+              font: { family: "'Inter', sans-serif", size: 12 }
+            }
+          },
           y: {
-            beginAtZero: true
+            grid: {
+              color: '#f1f5f9',
+              drawOnChartArea: true,
+              tickColor: 'transparent'
+            },
+            border: {
+              dash: [5, 5]
+            },
+            ticks: {
+              color: '#64748b',
+              font: { family: "'Inter', sans-serif", size: 12 },
+              callback: function(value: any) {
+                return '$' + value;
+              }
+            }
           }
-        }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
       }
     });
   }

@@ -26,6 +26,8 @@ public class ProductoMapper {
             dto.setCategoriaId(entity.getCategoria().getId());
             dto.setCategoriaNombre(entity.getCategoria().getNombre());
         }
+        dto.setDescripcion(entity.getDescripcion());
+        dto.setImagenUrl(entity.getImagenUrl());
         return dto;
     }
 
@@ -42,6 +44,8 @@ public class ProductoMapper {
         entity.setStock(dto.getStock());
         if (dto.getStockMinimo() != null) entity.setStockMinimo(dto.getStockMinimo());
         if (dto.getStockMaximo() != null) entity.setStockMaximo(dto.getStockMaximo());
+        if (dto.getDescripcion() != null) entity.setDescripcion(dto.getDescripcion());
+        if (dto.getImagenUrl() != null) entity.setImagenUrl(dto.getImagenUrl());
         // La relación con Categoria se resuelve en el Service
         return entity;
     }

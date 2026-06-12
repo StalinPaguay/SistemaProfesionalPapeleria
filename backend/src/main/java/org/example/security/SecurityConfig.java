@@ -38,6 +38,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Endpoints de login y registro públicos
                 .requestMatchers("/cookie/**").permitAll() // Endpoints de cookie de la fase 2
+                .requestMatchers("/ws/**").permitAll() // Endpoints SOAP públicos (seguridad manejada por WSS4J)
                 .anyRequest().authenticated() // Cualquier otra ruta requiere autenticación
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

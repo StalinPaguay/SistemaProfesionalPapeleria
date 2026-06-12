@@ -4,14 +4,16 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
 
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, CommonModule],
   template: `
-    <div [ngClass]="authService.isLoggedIn() ? 'app-layout' : 'auth-layout'">
-      <app-sidebar *ngIf="authService.isLoggedIn()"></app-sidebar>
-      <main [ngClass]="authService.isLoggedIn() ? 'main-content' : 'auth-content'">
+    <div [ngClass]="shouldShowSidebar() ? 'app-layout' : 'auth-layout'">
+      <app-sidebar *ngIf="shouldShowSidebar()"></app-sidebar>
+      <main [ngClass]="shouldShowSidebar() ? 'main-content' : 'auth-content'">
         <router-outlet></router-outlet>
       </main>
     </div>
@@ -40,5 +42,11 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'PaperDS';
-  constructor(public authService: AuthService) {}
+  
+  constructor(public authService: AuthService, private router: Router) {}
+  
+  shouldShowSidebar(): boolean {
+    const isPublicPage = this.router.url === '/' || this.router.url === '/login' || this.router.url === '/register';
+    return this.authService.isLoggedIn() && !isPublicPage;
+  }
 }

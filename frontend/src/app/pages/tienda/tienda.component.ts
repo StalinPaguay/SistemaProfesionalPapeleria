@@ -56,7 +56,7 @@ export class TiendaComponent implements OnInit {
   }
 
   agregarAlCarrito(producto: any) {
-    if (producto.stock_actual <= 0) {
+    if (producto.stock <= 0) {
       alert('Producto agotado');
       return;
     }
@@ -66,7 +66,7 @@ export class TiendaComponent implements OnInit {
       nombre: producto.nombre,
       precio: producto.precio,
       cantidad: 1,
-      stockDisponible: producto.stock_actual
+      stockDisponible: producto.stock
     });
     
     // Opcional: mostrar un toast o mensaje de éxito

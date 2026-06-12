@@ -1,0 +1,141 @@
+<div class="page-header">
+  <h2><span class="material-icons-outlined">people</span> Gestión de Usuarios</h2>
+  <button class="btn btn-primary" (click)="abrirModalCrear()">
+    <span class="material-icons-outlined">person_add</span> Nuevo Usuario
+  </button>
+</div>
+
+<div *ngIf="mensaje" class="alert" [ngClass]="'alert-' + tipoMensaje">
+  <span class="material-icons-outlined">{{ tipoMensaje === 'success' ? 'check_circle' : 'error' }}</span>
+  {{ mensaje }}
+</div>
+
+<div class="card">
+  <div class="table-container" *ngIf="usuarios.length > 0; else empty">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Completo</th>
+          <th>Correo Electrónico</th>
+          <th>Rol</th>
+          <th style="width: 160px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios">
+          <td><span class="badge badge-info">#{{ u.id }}</span></td>
+          <td><strong>{{ u.nombre }} {{ u.apellido }}</strong></td>
+          <td>{{ u.correo }}</td>
+          <td>
+            <span class="badge" [ngClass]="{'badge-admin': u.rol === 'ADMINISTRADOR', 'badge-user': u.rol === 'USUARIO'}">
+              {{ u.rol }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn-icon edit" (click)="abrirModalEditar(u)" title="Editar Perfil">
+                <span class="material-icons-outlined">edit</span>
+              </button>
+              <button class="btn-icon auth" (click)="abrirModalRol(u)" title="Cambiar Rol">
+                <span class="material-icons-outlined">manage_accounts</span>
+              </button>
+              <button class="btn-icon delete" (click)="eliminar(u.id!)" title="Eliminar Cuenta">
+                <span class="material-icons-outlined">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #empty>
+    <div class="empty-state">
+      <span class="material-icons-outlined">group_off</span>
+      <p>No hay usuarios registrados</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal Crear/Editar Usuario -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons-outlined">{{ editandoId ? 'edit' : 'person_add' }}</span>
+        {{ editandoId ? 'Editar Usuario' : 'Nuevo Usuario' }}
+      </h3>
+      <button class="close-btn" (click)="cerrarModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group row">
+        <div class="col">
+          <label>Nombre</label>
+          <input type="text" class="form-control" [(ngModel)]="usuarioForm.nombre" required>
+        </div>
+        <div class="col">
+          <label>Apellido</label>
+          <input type="text" class="form-control" [(ngModel)]="usuarioForm.apellido" required>
+        </div>
+      </div>
+      
+      <div class="form-group" *ngIf="!editandoId">
+        <label>Correo Electrónico</label>
+        <input type="email" class="form-control" [(ngModel)]="usuarioForm.correo" required>
+      </div>
+
+      <div class="form-group" *ngIf="!editandoId">
+        <label>Contraseña</label>
+        <input type="password" class="form-control" [(ngModel)]="usuarioForm.password" required>
+      </div>
+
+      <div class="form-group" *ngIf="!editandoId">
+        <label>Rol Inicial</label>
+        <select class="form-control" [(ngModel)]="usuarioForm.rol">
+          <option value="USUARIO">Usuario (Cliente)</option>
+          <option value="ADMINISTRADOR">Administrador</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="guardar()">
+        <span class="material-icons-outlined">save</span>
+        {{ editandoId ? 'Actualizar Datos' : 'Crear Cuenta' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Rol -->
+<div class="modal-backdrop" *ngIf="mostrarModalRol" (click)="cerrarModal()">
+  <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><span class="material-icons-outlined">manage_accounts</span> Cambiar Rol</h3>
+      <button class="close-btn" (click)="cerrarModal()">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Asignar nuevo rol:</label>
+        <select class="form-control" [(ngModel)]="nuevoRol">
+          <option value="USUARIO">Usuario (Cliente)</option>
+          <option value="ADMINISTRADOR">Administrador (Acceso Total)</option>
+        </select>
+      </div>
+      <p class="text-muted" style="font-size: 0.8rem; margin-top: 10px;">
+        Los administradores tienen acceso completo al dashboard, productos, categorías y compras globales. Los usuarios solo pueden ver la tienda y su propio carrito.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" (click)="guardarRol()">
+        <span class="material-icons-outlined">security</span>
+        Aplicar Rol
+      </button>
+    </div>
+  </div>
+</div>

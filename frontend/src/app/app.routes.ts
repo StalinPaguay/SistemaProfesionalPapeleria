@@ -9,10 +9,12 @@ import { RegisterComponent } from './pages/register/register.component';
 import { TiendaComponent } from './pages/tienda/tienda.component';
 import { CarritoComponent } from './pages/carrito/carrito.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { UsuariosComponent } from './components/usuarios/usuarios.component';
+import { HomeComponent } from './pages/home/home.component';
 import { authGuard, adminGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   
@@ -25,6 +27,7 @@ export const routes: Routes = [
   
   // Rutas de Administrador
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'usuarios', component: UsuariosComponent, canActivate: [authGuard, adminGuard] },
   { path: 'categorias', component: CategoriasComponent, canActivate: [authGuard, adminGuard] },
   { path: 'productos', component: ProductosComponent, canActivate: [authGuard, adminGuard] },
   { path: 'proveedores', component: ProveedoresComponent, canActivate: [authGuard, adminGuard] },

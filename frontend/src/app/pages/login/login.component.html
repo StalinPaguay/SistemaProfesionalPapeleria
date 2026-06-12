@@ -1,15 +1,45 @@
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 tracking-tight">
-      <span class="text-blue-600">Paper</span>DS
-    </h2>
-    <p class="mt-2 text-center text-sm text-gray-600">
-      Sistema de Gestión Profesional
-    </p>
+<div class="auth-container animate-fade-in">
+  
+  <!-- Left Panel: Graphic / Brand -->
+  <div class="auth-visual hidden lg:flex">
+    <div class="visual-overlay"></div>
+    <div class="visual-content">
+      <div class="brand-badge mb-8">
+        <span class="material-icons-outlined">storefront</span>
+        PaperDS Premium
+      </div>
+      <h1 class="visual-title">Optimiza tu <br/>inventario hoy.</h1>
+      <p class="visual-subtitle">
+        Miles de artículos, cientos de proveedores, una sola plataforma.
+      </p>
+      
+      <!-- Decoraciones flotantes -->
+      <div class="floating-items">
+        <div class="floating-item item-1">
+          <span class="material-icons-outlined">inventory_2</span>
+        </div>
+        <div class="floating-item item-2">
+          <span class="material-icons-outlined">shopping_cart</span>
+        </div>
+        <div class="floating-item item-3">
+          <span class="material-icons-outlined">analytics</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-xl sm:px-10 border border-gray-100">
+  <!-- Right Panel: Login Form -->
+  <div class="auth-form-wrapper">
+    <div class="form-container animate-slide-up">
+      <div class="text-center lg:text-left mb-10">
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+          Bienvenido de nuevo
+        </h2>
+        <p class="text-slate-500">
+          Ingresa tus credenciales para acceder al sistema.
+        </p>
+      </div>
+
       <form class="space-y-6" (ngSubmit)="login()">
         
         <div *ngIf="error" class="alert alert-error mb-4">
@@ -17,38 +47,44 @@
           <span>{{ error }}</span>
         </div>
 
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">
-            Correo Electrónico
-          </label>
-          <div class="mt-1">
+        <div class="form-group">
+          <label for="email" class="font-medium text-slate-700">Correo Electrónico</label>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+              <span class="material-icons-outlined">email</span>
+            </span>
             <input id="email" name="email" type="email" autocomplete="email" required [(ngModel)]="credentials.correo"
-                   class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors">
+                   class="input-premium pl-10" placeholder="tu@correo.com">
           </div>
         </div>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">
-            Contraseña
-          </label>
-          <div class="mt-1">
+        <div class="form-group">
+          <div class="flex justify-between items-center">
+            <label for="password" class="font-medium text-slate-700">Contraseña</label>
+            <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">¿Olvidaste tu contraseña?</a>
+          </div>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+              <span class="material-icons-outlined">lock</span>
+            </span>
             <input id="password" name="password" type="password" autocomplete="current-password" required [(ngModel)]="credentials.password"
-                   class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors">
+                   class="input-premium pl-10" placeholder="••••••••">
           </div>
         </div>
 
         <div>
           <button type="submit" [disabled]="loading || !credentials.correo || !credentials.password"
-                  class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors">
-            <span *ngIf="!loading">Iniciar Sesión</span>
+                  class="btn-premium w-full text-lg mt-4">
+            <span *ngIf="!loading">Ingresar al Dashboard</span>
             <span *ngIf="loading" class="material-icons-outlined animate-spin">autorenew</span>
           </button>
         </div>
         
-        <div class="text-center mt-4 text-sm text-gray-600">
-          ¿No tienes una cuenta? <a routerLink="/register" class="font-medium text-blue-600 hover:text-blue-500">Regístrate aquí</a>
+        <div class="text-center mt-8 text-sm text-slate-500">
+          ¿No tienes una cuenta? <a routerLink="/register" class="font-bold text-indigo-600 hover:text-indigo-500 transition-colors">Regístrate gratis</a>
         </div>
       </form>
+      
     </div>
   </div>
 </div>
